@@ -6,15 +6,15 @@ from dbprovider import checkExistsStudent, checkExistsSubject, getStudentByCode,
 from utils import printMenu, clearScreen, printHeader
 def scoreMenuScreen():
     clearScreen()
-    printHeader('QUẢN LÍ ĐIỂM THI')
+    printHeader('SCORE MANAGEMENT')
     funcs = [
-        '1. Thêm ĐIỂM THI',
-        '2. Sửa ĐIỂM THI',
-        '3. Xóa ĐIỂM THI',
-        '4. Tìm kiếm ĐIỂM THI',
-        '5. Thống kê theo Điểm Tổng Kết',
-        '6. Xuất ra file CSV',
-        '0. Trở về màn hình chính'
+        '1. Add score',
+        '2. Edit score',
+        '3. Delete score',
+        '4. Search score',
+        '5. List score',
+        '6. Export score as CSV',
+        '0. Return'
     ]
     printMenu(funcs)
 
@@ -22,7 +22,7 @@ def scoreMenuScreen():
 
     cmd = None 
     while cmd not in ['1','2','3','4', '5', '6','0']: 
-        cmd = input('Chọn chức năng: ')
+        cmd = input('Choose number: ')
 
     if cmd == '1':
         addScoreScreen()
@@ -48,54 +48,54 @@ def scoreMenuScreen():
 
 def addScoreScreen():
     clearScreen()
-    printHeader('THÊM ĐIỂM THI')
+    printHeader('Add score')
 
     # Nhập dữ liệu từ bàn phím
     # Validate dữ liệu nhập từ bàn phím - student_Code
     while True:
         # 6 ký tự
-        studentCode = input('Nhập mã học viên:')
+        studentCode = input('Enter student code:')
         # Khong duoc bo trong
         if studentCode == '':
-            print('Không được để trống mã HV')
+            print('Student Code cannot be empty')
             continue
         if len(studentCode) != 6:
-            print('Mã HV phải bao gồm 6 ký tự.')
+            print('Student code has to have 6 characters')
             continue
         # 2 ký tự đầu phải là 'PY'
         if studentCode.startswith('PY') == False:
-            print('2 ký tự đầu phải là "PY".')
+            print('Student code has to begin with PY')
             continue
         # phai tồn tại trong DB
         isExists = checkExistsStudent(studentCode)
         if isExists == False:
-            print(f'Mã HV "{studentCode}" không tồn tại.')
+            print(f'Student Code "{studentCode}" does not exist')
             continue
         # phai viet hoa
         if studentCode.isupper() == False:
-            print('Mã học viên phải viết hoa')
+            print('Student Code has to be in capital letters')
             continue
         break 
 
     # Validate dữ liệu nhập từ bàn phím - ma mon hoc
 
     while True:
-        subjectCode = input('Nhập vào mã môn học: ') 
+        subjectCode = input('Enter subject code: ') 
         # Không được để trống
         if subjectCode == '':
-            print('Không được để trống Mã môn học ')
+            print('Subject Code cannot be empty ')
             continue
         # phai tồn tại trong DB
         if checkExistsSubject(subjectCode) == False:
-            print('Mã môn học không tồn tại')
+            print('Student code has to exist in database')
             continue
         # Phai viet in hoa
         if subjectCode.isupper() == False:
-            print('Mã môn học phải viết in hoa')
+            print('Student code has to be in capital letters')
             continue
         # 5 ki tu
         if len(subjectCode) != 5:
-            print('Mã môn học phải có 5 kí tự')
+            print('Subject code has to have 5 characters')
             continue
         break
 
@@ -103,29 +103,29 @@ def addScoreScreen():
 
     isExists = checkExistsScore(studentCode, subjectCode)
     if isExists == True:
-        print('Điểm này đã nhập rồi!')
+        print('This score has been entered!')
     else:
         while True:
-            processScore = float(input('Nhập điểm quá trình: '))         
+            processScore = float(input('Enter process score: '))         
             # 1-100
             if processScore > 100 or processScore < 0:
-                print('Vui lòng nhập lại điểm từ 1-100')
+                print('Process score has to be from 1 to 100')
                 continue
             # Không được để trống
             if processScore == '':
-                print('Không được để trống điểm quá trình ')
+                print('Cannot leave empty ')
                 continue
             break  
         
         while True:
-            finalTestScore = float(input('Nhập điểm kết thúc: '))          
+            finalTestScore = float(input('Enter final test score: '))          
             # 1-100
             if finalTestScore > 100 or finalTestScore < 0:
-                print('Vui lòng nhập lại điểm từ 1-100')
+                print('Final Test score has to be from 1 to 100')
                 continue
         # Không được để trống
             if finalTestScore == '':
-                print('Không được để trống điểm kết thúc')
+                print('Cannot leave empty')
                 continue
             break  
         # (loi 'processScore' referenced before assignment)
@@ -138,62 +138,62 @@ def addScoreScreen():
                 'Final_Test_Score': finalTestScore
             }
         writeScore(sc)
-        print("Thêm điểm thành công!!")
+        print("Add score successfully!!")
 
-    ans = input("Nhập y/Y để tiếp tục thêm: ")
+    ans = input("Enter y/Y to proceed: ")
     if ans.lower() == 'y':
         # quay lại để nhập tiếp
         addScoreScreen()
 
 def editScoreScreen():
     clearScreen()
-    printHeader('CHỈNH SỬA THÔNG TIN ĐIỂM THI')
+    printHeader('Edit Score Information')
 
     # Nhập dữ liệu từ bàn phím
     # Validate dữ liệu nhập từ bàn phím - studentCode
     while True:
         # 6 ký tự
-        studentCode = input('Mã HV cần sửa: ')
+        studentCode = input('Student Code: ')
         # Khong duoc bo trong
         if studentCode == '':
-            print('Không được để trống mã HV')
+            print('Cannot leave empty')
             continue
         if len(studentCode) != 6:
-            print('Mã HV phải bao gồm 6 ký tự.')
+            print('Studen code has to have 6 characters.')
             continue
         # 2 ký tự đầu phải là 'PY'
         if studentCode.startswith('PY') == False:
-            print('2 ký tự đầu phải là "PY".')
+            print('First two characters have to start with "PY".')
             continue
         # phai tồn tại trong DB
         isExists = checkExistsStudent(studentCode)
         if isExists == False:
-            print(f'Mã HV "{studentCode}" không tồn tại.')
+            print(f'Student Code"{studentCode}" does not exist.')
             continue
         # phai viet hoa
         if studentCode.isupper() == False:
-            print('Mã học viên phải viết hoa')
+            print('Student Code has to be in capital letters')
             continue
         break 
 
     # Validate dữ liệu nhập từ bàn phím - subjectCode
     while True:
-        subjectCode = input('Nhập vào mã môn học: ') 
+        subjectCode = input('Enter subject code: ') 
         # Không được để trống
         if subjectCode == '':
-            print('Không được để trống Mã môn học ')
+            print('Cannot leave subject code empty ')
             continue
         # phai tồn tại trong DB
         if checkExistsSubject(subjectCode) == False:
-            print('Mã môn học không tồn tại')
+            print('Subject code does not exist')
             continue
         # Phai viet in hoa
         if subjectCode.isupper() == False:
-            print('Mã môn học phải viết in hoa')
+            print('Subject code has to be in capital letters')
             continue
         # 5 ki tu
         if len(subjectCode) != 5:
-            print('Mã môn học phải có 5 kí tự')
+            print('Subject code has to have 5 letters')
             continue
         break
 
@@ -202,39 +202,39 @@ def editScoreScreen():
     # Lấy thông tin theo mã học viên và mã môn học đã nhập
     sc = getScoreByCode(studentCode, subjectCode)
 
-    print('Điểm quá trình:', sc['Process_Score'])
+    print('Process Score:', sc['Process_Score'])
     processScore_new = sc['Process_Score']
-    ans = input('Nhập y/Y để sửa: ')
+    ans = input('Enter y/Y to edit: ')
     if ans.lower() == 'y':
         # Validate process score mới
-        processScore_new = float(input('Điểm quá trình mới: '))
+        processScore_new = float(input('New process score: '))
         while True:       
         # 1-100
             if processScore_new > 100 or processScore_new < 0:
-                print('Vui lòng nhập lại điểm từ 1-100')
+                print('Please add score from 1 to 100')
                 continue
             # Check số thực dùng hàm checkPoint
             # Không được để trống
             if processScore_new == '':
-                print('Không được để trống điểm quá trình ')
+                print('Cannot leave empty ')
                 continue
             break  
 
-    print('Điểm kết thúc:', sc['Final_Test_Score'])
+    print('Final Test Score:', sc['Final_Test_Score'])
     finalTestScore_new = sc['Final_Test_Score']
-    ans = input('Nhập y/Y để sửa: ')
+    ans = input('Enter y/Y to edit: ')
     if ans.lower() == 'y':
-        finalTestScore_new  = float(input('Điểm kết thúc mới: '))   
+        finalTestScore_new  = float(input('New Final Test Score: '))   
         while True:
-            finalTestScore_new = float(input('Nhập điểm kết thúc: '))          
+            finalTestScore_new = float(input('New final Test Score: '))          
             # 1-100
             if finalTestScore_new > 100 or finalTestScore_new < 0:
-                print('Vui lòng nhập lại điểm từ 1-100')
+                print('Please enter score from 1 to 100')
                 continue
         # Check số thực dùng hàm checkPoint
         # Không được để trống
             if finalTestScore_new == '':
-                print('Không được để trống điểm kết thúc')
+                print('Cannot leave empty')
                 continue
             break  
 
@@ -249,34 +249,34 @@ def editScoreScreen():
     writeScores(scs)
     print(f'Chỉnh sửa điểm của học viên có mã "{studentCode}", môn "{subjectCode}" thành công !!!')
 
-    ans = input('Nhập y/Y để tiếp tục: ')
+    ans = input('Enter y/Y to proceed: ')
     if ans.lower() == 'y':
         # Quay lại nhập tiếp, call chính nó
         editScoreScreen()
     
 def deleteScoreScreen():
     clearScreen()
-    printHeader('XÓA ĐIỂM THI')
+    printHeader('Delete score')
     
     while True:
-        studentCode = input('Mã học viên cần xóa: ')
+        studentCode = input('Student Code: ')
         if len(studentCode) != 6:
-            print('Mã HV phải bao gồm 6 ký tự.')
+            print('student code has to have 6 characters.')
             continue
         isExists = checkExistsStudent(studentCode)
         if isExists == False:
-            print(f'HV có mã "{studentCode}" không tồn tại.')
+            print(f'student with student code "{studentCode}" doesnt exist.')
             continue
         break
 
     while True:
-        subjectCode = input('Mã môn học cần xóa: ')
+        subjectCode = input('Subject Code: ')
         if len(subjectCode) != 5:
-            print('Mã HV phải bao gồm 5 ký tự.')
+            print('Subject code has to have 5 characters.')
             continue
         isExists = checkExistsSubject(subjectCode)
         if isExists == False:
-            print(f'Môn học có mã "{subjectCode}" không tồn tại.')
+            print(f'Subject code "{subjectCode}" doesnt exist')
             continue
         break
 
@@ -298,9 +298,9 @@ def deleteScoreScreen():
     scs.pop(idx)
     writeScores(scs)
 
-    print(f'Xóa điểm môn học có mã "{subjectCode}" thành công')
+    print(f'Delete subject "{subjectCode}" successfully')
 
-    ans = input('Nhập y/Y để tiếp tục: ')
+    ans = input('Enter y/Y to proceed: ')
     if ans.lower() == 'y':
         # Quay lại nhập tiếp, call chính nó
         deleteScoreScreen()
@@ -308,7 +308,7 @@ def deleteScoreScreen():
 def searchScoreScreen():
     scs = readScores()
     printScores(scs)
-    searchContent = input('Nội dung tìm kiếm: ')
+    searchContent = input('Search info: ')
     if searchContent != '':
         scsFiltered = []
         for sc in scs:
@@ -318,25 +318,25 @@ def searchScoreScreen():
         
         printScores(scsFiltered)
 
-    ans = input('Nhập y/Y để tiếp tục: ')
+    ans = input('Enter y/Y to proceed: ')
     if ans.lower() == 'y':
         # Quay lại nhập tiếp, call chính nó
         searchScoreScreen()
 
 def printScores(scs: list):
     clearScreen()
-    printHeader('DANH SÁCH ĐIỂM THI')
+    printHeader('Score List')
 
-    print('Mã HV\tMã môn học\tĐiểm quá trình\tĐiểm cuối cùng')
+    print('Student Code\tSubject Code\tProcess Score\tFinal Test Score')
     for sc in scs:
         print(f"{sc['Student_Code']}\t{sc['Student_Code']}\t{sc['Process_Score']}\t{sc['Final_Test_Score']}")
 
 def printRankScore():
     clearScreen()
-    printHeader('THỐNG KÊ ĐIỂM THI')
+    printHeader('Score List')
 
     scs = readScores()
-    print('Mã học viên\tHọ Tên\tMã môn học\tTên môn học\tĐiểm quá trình\tĐiểm kết thúc\tĐiểm tổng kết\tXếp loại')
+    print('Student Code\tStudent Name\tSubject Code\tSubject\tProcess Score\tFinal Test Score\tTotal Score\tRanking')
     for sc in scs:
         studentCode = sc['Student_Code']
         
@@ -354,7 +354,7 @@ def printRankScore():
         rank = ranking(totalScore)
         print(f'{studentCode}\t\t{fullName}\t{subjectCode}\t\t{name}\t\t{processScore}\t\t{finalTestScore}\t\t{totalScore}\t\t{rank}')
 
-    ans = input("Nhập y/Y để thoát: ")
+    ans = input("Enter y/Y to exit: ")
     if ans.lower() == 't':
         scoreMenuScreen()
     

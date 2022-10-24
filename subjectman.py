@@ -4,7 +4,7 @@ from utils import printMenu,clearScreen,printHeader
 
 def subjectMenuScreen():
     clearScreen()
-    printHeader('QUẢN LÍ MÔN HỌC')
+    printHeader('Student Management')
     funcs = [
         '1. Thêm',
         '2. Sửa',
@@ -42,40 +42,40 @@ def subjectMenuScreen():
 
 def addSubjectScreen():
     clearScreen()
-    printHeader('THÊM MÔN HỌC')
+    printHeader('Add subjects')
     
     # Nhập dữ liệu từ bàn phím
     # Validate dữ liệu nhập từ bàn phím - ma mon hoc
 
     while True:
-        Code = input('Nhập vào mã môn học: ') 
+        Code = input('Enter subject code: ') 
         # Không được để trống
         if Code == '':
-            print('Không được để trống Mã môn học ')
+            print('Cannot leave empty')
             continue
         # Không được trùng
         if checkExistsSubject(Code) == True:
-            print('Môn học đã tồn tại')
+            print('Subject existed')
             continue
         # Phai viet in hoa
         if Code.isupper() == False:
-            print('Mã môn học phải viết in hoa')
+            print('Has to be in capital letters')
             continue
         # 5 ki tu
         if len(Code) != 5:
-            print('Mã môn học có 5 kí tự')
+            print('Can only have 5 characters')
             continue
         break
 
     # Validate dữ liệu nhập từ bàn phím - tên môn học
 
     while True:
-        Name = input('Nhập vào tên môn học: ')  # KHông được để trống
+        Name = input('Enter subject name: ')  # KHông được để trống
         if Name == '':
-            print('Không được để trống Tên môn học')
+            print('Cannot leave empty')
             continue
         if checkExistsName(Name) == True: # không được trùng
-            print('Tên môn học đã tồn tại')
+            print('Already existed')
             continue
         break
     
@@ -85,35 +85,35 @@ def addSubjectScreen():
         'Name': Name
     }
     writeSubject(sub)
-    print(f"Thêm môn học {Code} thành công !!!")
+    print(f"Succesfully added!!!")
 
-    ans = input('Nhập y/Y để tiếp tục')
+    ans = input('Enter y/Y to proceed')
     if ans.lower() == 'y':
         addSubjectScreen()
 
 def editSubjectScreen():
     clearScreen()
-    printHeader('CHỈNH SỬA THÔNG TIN MÔN HỌC')
+    printHeader('Edit Subject Screen')
 
     while True:
-        code = input('Mã môn cần sửa: ')
+        code = input('Subject Code: ')
         if len(code) != 5:
-            print('Mã HV phải bao gồm 5 ký tự.')
+            print('Has to have 5 characters.')
             continue
         isExists = checkExistsSubject(code)
         if isExists == False:
-            print(f'HV có mã "{code}" không tồn tại.')
+            print(f'Doesnt exist')
             continue
         break
 
     # Lấy thông tin theo mã môn học đã nhập
     sub = getSubjectByCode(code)
 
-    print('Môn học:', sub['Name'])  # Hiển thị tên cũ
+    print('Subject:', sub['Name'])  # Hiển thị tên cũ
     name = sub['Name']
-    ans = input('Nhập y/Y để sửa: ')
+    ans = input('Enter y/Y to proceed: ')
     if ans.lower() == 'y':
-        name = input('Tên môn mới: ')  
+        name = input('New subject: ')  
 
     # Sửa thông tin bằng cách sửa trên list, sau đó ghi đè mode 'w' vào trong file .txt
     # Validate du lieu 
@@ -125,25 +125,25 @@ def editSubjectScreen():
             break #thoát vòng lặp, sửa xong thì ko duyệt những phần tử sau nữa. Nếu thụt ra ngoài (ngang hàng với 
         # if, thì nó có nghĩa là chỉ lặp một vòng for rồi sau đó sẽ break luôn, vì  vậy phải thụt vào trong)
     writeSubjects(subs)
-    print(f'Chỉnh sửa môn học có mã "{code}" thành công !!!')
+    print(f'Successfully edited !!!')
 
-    ans = input('Nhập y/Y để tiếp tục: ')
+    ans = input('Enter y/Y to proceed: ')
     if ans.lower() == 'y':
         # Quay lại nhập tiếp, call chính nó
         editSubjectScreen()
 
 def deleteSubjectScreen():
     clearScreen()
-    printHeader('XÓA MÔN HỌC')
+    printHeader('Delete subjects')
 
     while True:
-        code = input('Mã môn học cần xóa: ')
+        code = input('Subject Code: ')
         if len(code) != 5:
-            print('Mã mon hoc phải bao gồm 5 ký tự.')
+            print('Only 5 characters.')
             continue
         isExists = checkExistsSubject(code)
         if isExists == False:
-            print(f'Môn học có mã "{code}" không tồn tại.')
+            print(f'Doesnt exist.')
             continue
         break
 
@@ -156,9 +156,9 @@ def deleteSubjectScreen():
             break #thoát vòng lặp, kp duyệt những phần tử sau nữa
     subs.pop(idx)
     writeSubjects(subs)
-    print(f'Xóa môn học có mã "{code}" thành công')
+    print(f'Successfully deleted')
 
-    ans = input('Nhập y/Y để tiếp tục: ')
+    ans = input('Enter y/Y to proceed: ')
     if ans.lower() == 'y':
         # Quay lại nhập tiếp, call chính nó
         deleteSubjectScreen()
@@ -167,7 +167,7 @@ def searchSubjectScreen():
     subs = readSubjects()
     printSubjects(subs)
 
-    searchContent = input('Nội dung tìm kiếm: ')
+    searchContent = input('Search info: ')
     if searchContent != '':
         subsFiltered = []
         for sub in subs:
@@ -177,14 +177,14 @@ def searchSubjectScreen():
         
         printSubjects(subsFiltered)
         
-    ans = input('Nhập y/Y để tiếp tục: ')
+    ans = input('Enter y/Y to proceed: ')
     if ans.lower() == 'y':
         # Quay lại nhập tiếp, call chính nó
         searchSubjectScreen()
     
 def printSubjects(subs: list):
     clearScreen()
-    printHeader('DANH SÁCH MÔN HỌC')
+    printHeader('SUBJECT LIST')
 
     print('Code\tName')
     for sub in subs:

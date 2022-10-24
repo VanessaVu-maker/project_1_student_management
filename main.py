@@ -1,6 +1,5 @@
-# Main module của chương trình
+# Main program module
 
-# Nháp để call các function cho việc testing
 import cmd
 from unittest import result
 from dbprovider import writeStudent, writeStudents , readStudents
@@ -15,19 +14,19 @@ from scoreman import scoreMenuScreen, addScoreScreen
 # Màn hình Menu chính của chương trình
 def mainMenuScreen():
     clearScreen()
-    printHeader('CHƯƠNG TRÌNH QUẢN LÝ ĐIỂM THI')
+    printHeader('STUDENT MANAGEMENT PROGRAM')
 
     funcs = [
-        '1. Quản lý Học viên',
-        '2. Quản lý Môn Học',
-        '3. Quản lý Điểm thi',
-        '0. Thoát'
+        '1. Student Management',
+        '2. Subject Management',
+        '3. Score Management',
+        '0. Back'
     ]
     printMenu(funcs)
 
     cmd = None # mã lệnh người dùng chọn, ban đầu chưa phải lệnh nào cả
     while cmd not in ['1', '2', '3', '0']:
-        cmd = input('Chọn chức năng: ')
+        cmd = input('Choose number: ')
 
     if cmd == '1':
         # Chuyển sang màn hình QL Học viên
@@ -46,7 +45,7 @@ def mainMenuScreen():
         pass
     elif cmd == '0':
         # Thoát chương trình
-        print('Kết thúc chương trình. Hẹn gặp lại !!!')
+        print('Program finished. Thank you !!!')
         exit()
 
 if __name__ == '__main__':

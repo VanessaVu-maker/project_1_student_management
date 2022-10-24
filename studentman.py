@@ -5,20 +5,20 @@ from dbprovider import writeStudent, writeStudents, readStudents, getStudentByCo
 
 def studentMenuScreen():
     clearScreen()
-    printHeader('QUẢN LÝ HỌC VIÊN')
+    printHeader('Student Management')
 
     funcs = [
-        '1. Thêm HỌC VIÊN',
-        '2. Sửa HỌC VIÊN',
-        '3. Xoá HỌC VIÊN',
-        '4. Danh sách HỌC VIÊN',
-        '0. Trở về màn hình CHƯƠNG TRÌNH QUẢN LÝ ĐIỂM THI'
+        '1. Add Student',
+        '2. Edit Student',
+        '3. Delete Student',
+        '4. Student List',
+        '0. Return'
     ]
     printMenu(funcs)
 
     cmd = None  # mã lệnh người dùng chọn, ban đầu chưa phải lệnh nào cả
     while cmd not in ['1', '2', '3', '4', '0']:
-        cmd = input('Chọn chức năng: ')
+        cmd = input('Enter number: ')
 
     if cmd == '1':
         # Chuyển sang màn hình Thêm Học viên
@@ -47,92 +47,92 @@ def studentMenuScreen():
 
 def addStudentScreen():
     clearScreen()
-    printHeader('THÊM HỌC VIÊN')
+    printHeader('Add studnent')
 
     # Nhập dữ liệu từ bàn phím
     # Validate dữ liệu nhập từ bàn phím - ma hoc vien
     while True:
         # 6 ký tự
-        code = input('Mã HV: ')
+        code = input('Student Code: ')
         if len(code) != 6:
-            print('Mã HV phải bao gồm 6 ký tự.')
+            print('Student Code has to have 6 letters.')
             continue
         # 2 ký tự đầu phải là 'PY'
         if code.startswith('PY') == False:
-            print('2 ký tự đầu phải là "PY".')
+            print('2 first characters has to be "PY".')
             continue
         # không tồn tại trong DB
         isExists = checkExistsStudent(code)
         if isExists == True:
-            print(f'Mã HV "{code}" đã được sử dụng.')
+            print(f'Student Code "{code}" has been used.')
             continue
         # phai viet hoa
         if code.isupper() == False:
-            print('Mã học viên phải viết hoa')
+            print('Student Code has to be in capital letters')
             continue
         # Khong duoc bo trong
         if code == '':
-            print('Không được để trống mã HV')
+            print('Cannot leave empty')
             continue
         break    
     
     # Validate dữ liệu nhập từ bàn phím - ten hoc vien
     while True:
-        fullName = input('Họ tên:')    
+        fullName = input('Student Name:')    
         # Phai viet hoa
         if fullName.isupper() == False:
-            print('Tên học viên phải viết hoa')
+            print('Student Name has to be in capital letters')
             continue
         # Khong duoc bo trong
         if fullName == '':
-            print('Không được để trống tên học viên')
+            print('Cannot leave empty')
             continue
         break    
 
     # Validate dữ liệu nhập từ bàn phím - ngay sinh
 
     while True:
-        birthday = input('Ngày sinh (dd/MM/yyyy): ') 
+        birthday = input('Birthday (dd/MM/yyyy): ') 
         # đúng định dang đd/MM/yyyy
         if checkDate(birthday) == None:
-            print('Hãy nhập ngày sinh đúng với format dd/mm/yyyy')
+            print('Enter format dd/mm/yyyy')
             continue
         # không được để trống
         if birthday == '':
-            print('Không được để trống ngày sinh')
+            print('Cannot leave empty')
             continue
         break   
 
     # Validate dữ liệu nhập từ bàn phím - gioi tinh
 
     while True:
-        sex = input('Giới tính (0-nữ|1-nam): ') 
+        sex = input('Gender (0-nữ|1-nam): ') 
         # chỉ là '0' hoặc '1'
         if sex not in ['0','1']:
-            print('Hãy nhập giới tính: 1 - Nam, 0 - nữ')
+            print('Enter gender: 1 - Nam, 0 - nữ')
             continue
          # Không được bỏ trống
         if sex == '':
-            print('Không được bỏ trống giới tính')
+            print('Cannot leave empty')
             continue
         break
 
-    address = input('Địa chỉ: ')
+    address = input('Address: ')
 
     # Validate dữ liệu nhập từ bàn phím - SDT
 
     while True:
-        phone = input('SĐT: ')          
+        phone = input('Phone number: ')          
         # Có thể không nhập
         if phone == '':
             break
         # Chỉ chứa số, độ dài 10 kí tự
         if phone.isdigit() == False:
-            print('SĐT chỉ được chứa số')
+            print('Only contain numbers')
             continue
         # độ dài 10 kí tự
         if len(phone) != 10:
-            print(' Số điện thoại phải chứa đúng 10 kí tự')
+            print(' Phone number can only have 10 characters')
             continue
         break  
     
@@ -145,7 +145,7 @@ def addStudentScreen():
             break
         # Có thể không nhập, nhưng nếu nhập thì phải đúng format Email (sử dụng regex Email để check)  
         if checkEmail(email) == False:
-            print('Yêu cầu nhập đúng format Email')
+            print('Enter correct email format')
             continue
         break
 
@@ -161,9 +161,9 @@ def addStudentScreen():
         'Email': email
     }
     writeStudent(st)
-    print(f'Thêm học viên có mã "{code}" thành công !!!')
+    print(f'Added student "{code}" !!!')
 
-    ans = input('Nhập y/Y để tiếp tục: ')
+    ans = input('Enter y/Y to proceed: ')
     if ans.lower() == 'y':
         # Quay lại nhập tiếp, call chính nó
         addStudentScreen()
@@ -171,103 +171,103 @@ def addStudentScreen():
 
 def editStudentScreen():
     clearScreen()
-    printHeader('CHỈNH SỬA THÔNG TIN HỌC VIÊN')
+    printHeader('Edit Student Score')
 
     while True:
-        code = input('Mã HV cần sửa: ')
+        code = input('Student Code: ')
         # ko bo trong
         if len(code) != 6:
-            print('Mã HV phải bao gồm 6 ký tự.')
+            print('Student Code has to have 6 characters.')
             continue
         isExists = checkExistsStudent(code)
         if isExists == False:
-            print(f'HV có mã "{code}" không tồn tại.')
+            print(f'Student with code "{code}" doesnt exist.')
             continue
         break
 
     # Lấy thông tin theo mã học viên đã nhập
     st = getStudentByCode(code)
 
-    print('Họ tên:', st['FullName'])  # Hiển thị họ tên cũ
+    print('Full Name:', st['FullName'])  # Hiển thị họ tên cũ
     fullName = st['FullName']
-    ans = input('Nhập y/Y để sửa: ')
+    ans = input('Enter y/Y to edit: ')
     if ans.lower() == 'y':
         while True:
-            fullName = input('Họ tên mới: ')       
+            fullName = input('New Name: ')       
             # Khong duoc bo trong
             if fullName == '':
-                print('Không được để trống tên học viên')
+                print('Cannot leave empty')
                 continue
             # Phai viet hoa
             if fullName.isupper() == False:
-                print('Tên học viên phải viết hoa')
+                print('Student Name has to be in capital letters')
                 continue
             break      
 
-    print('Ngày sinh:', st['Birthday'])
+    print('Birthday:', st['Birthday'])
     birthday = st['Birthday']
-    ans = input('Nhập y/Y để sửa: ')
+    ans = input('Enter y/Y to edit: ')
     if ans.lower() == 'y':
         while True:
-            birthday = input('Ngày sinh mới (dd/MM/yyyy): ') 
+            birthday = input('New birthday (dd/MM/yyyy): ') 
             # không được để trống
             if birthday == '':
-                print('Không được để trống ngày sinh')
+                print('Cannot leave empty')
                 continue
             # đúng định dang đd/MM/yyyy
             if checkDate(birthday) == None:
-                print('Hãy nhập ngày sinh đúng với format dd/mm/yyyy')
+                print('Enter birhtday in format dd/mm/yyyy')
                 continue
             break   
 
-    print('Giới tính:', st['Sex'])
+    print('Gender:', st['Sex'])
     sex = st['Sex']
-    ans = input('Nhập y/Y để sửa: ')
+    ans = input('Enter y/Y to edit: ')
     if ans.lower() == 'y':
-        sex = input('Giới tính mới: ')
+        sex = input('New gender: ')
         while True:
-            sex = input('Giới tính (0-nữ|1-nam): ') 
+            sex = input('Gender (0-female|1-male): ') 
             # chỉ là '0' hoặc '1'
             if sex not in ['0','1']:
-                print('Hãy nhập giới tính: 1 - Nam, 0 - nữ')
+                print('Enter gender: 1 - male, 0 - female')
                 continue
             # Không được bỏ trống
             if sex == '':
-                print('Không được bỏ trống giới tính')
+                print('Cannot leave empty')
                 continue
             break
 
-    print('Địa chỉ:', st['Address'])
+    print('Address:', st['Address'])
     address = st['Address']
-    ans = input('Nhập y/Y để sửa: ')
+    ans = input('Enter y/Y to edit: ')
     if ans.lower() == 'y':
-        address = input('Địa chỉ mới: ')
+        address = input('New address: ')
 
-    print('SĐT:', st['Phone'])
+    print('Phone number:', st['Phone'])
     phone = st['Phone']
-    ans = input('Nhập y/Y để sửa: ')
+    ans = input('Enter y/Y to edit: ')
     if ans.lower() == 'y':
-        phone = input('SĐT mới: ')
+        phone = input('New phone number: ')
         while True:
-            phone = input('SĐT: ')          
+            phone = input('New phone number: ')          
             # Có thể không nhập
             if phone == '':
                 break
             # Chỉ chứa số, độ dài 10 kí tự
             if phone.isdigit() == False:
-                print('SĐT chỉ được chứa số')
+                print('Phone number can only has numbers')
                 continue
             # độ dài 10 kí tự
             if len(phone) != 10:
-                print(' Số điện thoại phải chứa đúng 10 kí tự')
+                print('Only 10 characters')
                 continue
             break  
 
     print('Email:', st['Email'])
     email = st['Email']
-    ans = input('Nhập y/Y để sửa: ')
+    ans = input('Enter y/Y to edit: ')
     if ans.lower() == 'y':
-        email = input('Email mới: ')
+        email = input('New email: ')
         while True:
             email = input('Email: ')        
             # Có thể không nhập
@@ -275,7 +275,7 @@ def editStudentScreen():
                 break
             # Có thể không nhập, nhưng nếu nhập thì phải đúng format Email (sử dụng regex Email để check)  
             if checkEmail(email) == False:
-                print('Yêu cầu nhập đúng format Email')
+                print('Please enter correct format Email')
                 continue
             break
 
@@ -293,9 +293,9 @@ def editStudentScreen():
             st['Email'] = email
             break
     writeStudents(sts)
-    print(f'Chỉnh sửa học viên có mã "{code}" thành công !!!')
+    print(f'Edit student "{code}" succesfully !!!')
 
-    ans = input('Nhập y/Y để tiếp tục: ')
+    ans = input('Enter y/Y to proceed: ')
     if ans.lower() == 'y':
         # Quay lại nhập tiếp, call chính nó
         editStudentScreen()
@@ -303,16 +303,16 @@ def editStudentScreen():
 
 def deleteStudentScreen():
     clearScreen()
-    printHeader('XÓA HỌC VIÊN')
+    printHeader('Delete student')
 
     while True:
-        code = input('Mã HV cần xóa: ')
+        code = input('Old student Code: ')
         if len(code) != 6:
-            print('Mã HV phải bao gồm 6 ký tự.')
+            print('Student code has to have 6 characters.')
             continue
         isExists = checkExistsStudent(code)
         if isExists == False:
-            print(f'HV có mã "{code}" không tồn tại.')
+            print(f'Does not exist.')
             continue
         break
 
@@ -325,9 +325,9 @@ def deleteStudentScreen():
             break
     sts.pop(idx)
     writeStudents(sts)
-    print(f'Xóa học viên có mã "{code}" thành công !!!')
+    print(f'Deleted !!!')
 
-    ans = input('Nhập y/Y để tiếp tục: ')
+    ans = input('Enter y/Y to proceed: ')
     if ans.lower() == 'y':
         # Quay lại nhập tiếp, call chính nó
         deleteStudentScreen()
@@ -337,7 +337,7 @@ def searchStudentScreen():
     sts = readStudents()
     printStudents(sts)
 
-    searchContent = input('Nội dung tìm kiếm: ')
+    searchContent = input('Search info: ')
     if searchContent != '':
         stsFiltered = []
         for st in sts:
@@ -348,7 +348,7 @@ def searchStudentScreen():
                 stsFiltered.append(st)
         printStudents(stsFiltered)
 
-    ans = input('Nhập y/Y để tiếp tục: ')
+    ans = input('Enter y/Y to proceed: ')
     if ans.lower() == 'y':
         # Quay lại nhập tiếp, call chính nó
         searchStudentScreen()
@@ -356,8 +356,8 @@ def searchStudentScreen():
 
 def printStudents(sts: list):
     clearScreen()
-    printHeader('DANH SÁCH HỌC VIÊN')
+    printHeader('Student List')
 
-    print('Mã HV\tHọ tên\t\tNgày sinh\tGiới\tĐịa chỉ\tSĐT\t\tEmail')
+    print('Student Code\tName\t\tBirthday\tGender\tAddress\tPhone number\t\tEmail')
     for st in sts:
         print(f"{st['Code']}\t{st['FullName']}\t{st['Birthday']}\t{st['Sex']}\t{st['Address']}\t{st['Phone']}\t{st['Email']}")
